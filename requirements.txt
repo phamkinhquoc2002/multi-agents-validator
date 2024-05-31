@@ -1,0 +1,9 @@
+streamlit
+pyautogen
+langchain
+langchain_community
+requests
+beautifulsoup4
+markdownify
+youtube-transcript-api
+tavily-python
