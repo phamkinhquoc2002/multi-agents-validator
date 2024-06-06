@@ -3,3 +3,8 @@ In today's digital landscape, misinformation can spread rapidly, making it cruci
 ## Multi-AI Agent Conversation Framework
 ____________________________________________________________________________________
 ![framework](https://github.com/phamkinhquoc2002/Ragification/blob/main/presentation.png)
+____________________________________________________________________________________
+### Run it locally
+```
+streamlit run app.py
+```
