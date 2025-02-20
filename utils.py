@@ -2,24 +2,25 @@ from typing import Annotated
 from langchain_community.document_loaders import YoutubeLoader
 from langchain.text_splitter import RecursiveCharacterTextSplitter
 from tavily import TavilyClient
+import os
 import requests
 from bs4 import BeautifulSoup
 from markdownify import markdownify
-import os
 from dotenv import load_dotenv
 
 load_dotenv()
 tavily_api_key=os.environ['TAVILY_API_KEY']
-
 tavily=TavilyClient(api_key=tavily_api_key)
+
 def search_tool(query: Annotated[str, "Search query"]) -> Annotated[str, "The search results"]:
     return tavily.get_search_context(query=query, search_depth="advanced")
 
-def get_llm_config(model_name,api_key):
+def get_llm_config(model_name: str,
+                   api_key: str) -> List[Dict[str, str]]:
     llm_config=[{"model":model_name, "api_key":api_key}]
     return llm_config
 
-def content_retrieval(url):
+def content_retrieval(url: str):
     try:
         responses=requests.get(url)
     except:
@@ -28,7 +29,7 @@ def content_retrieval(url):
     docs=soup.get_text()
     return markdownify(docs)
 
-def youtube_transcript_loader(url):
+def youtube_transcript_loader(url: str) -> str:
     loader = YoutubeLoader.from_youtube_url(url)
     docs = loader.load()
     docs= ' '.join([doc.page_content for doc in docs])
