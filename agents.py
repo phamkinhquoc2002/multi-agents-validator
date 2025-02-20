@@ -2,16 +2,19 @@ from autogen import UserProxyAgent, AssistantAgent, register_function
 from autogen.coding import LocalCommandLineCodeExecutor
 from utils import get_llm_config
 
-class Agents():
+class Agent():
     
-    def __init__(self, model_names:dict, code_executor, api_key):
+    def __init__(self, model_names:dict, api_key:str, code_executor):
         self.researcher=AssistantAgent(
             name="researcher",
-            system_message="You are a researcher tasked with summarizing notable information from a given context. Your role is to analyze the provided research content related to a topic. You should concisely summarize the 5 most relevant insights, facts, in bullet points while remaining unbiased. Your goal is to provide notable pơints of the content to facilitate further validation.",
-            llm_config={"config_list":get_llm_config(model_name=model_names['researcher'], api_key=api_key)}
+            llm_config={"config_list":get_llm_config(model_name=model_names['researcher'], 
+                                       api_key=api_key)}
+            system_message="You are a researcher tasked with summarizing notable information from a given context." 
+            "Your role is to analyze the provided research content related to a topic. You should concisely summarize the 5 most relevant insights, facts, in bullet points while remaining unbiased."
+            "Your goal is to provide notable pơints of the content to facilitate further validation.",
         )
         self.user_proxy=UserProxyAgent(
-             name="SearchTool",
+             name="search_tool",
              is_termination_msg=lambda x: x.get("content", "") and x.get("content", "").rstrip().endswith("TERMINATE"),
              human_input_mode="NEVER",
              max_consecutive_auto_reply=10,
@@ -19,7 +22,8 @@ class Agents():
         )
         self.questioner= AssistantAgent(
             name="questioner",
-            llm_config={"config_list":get_llm_config(model_name=model_names['researcher'], api_key=api_key)},
+            llm_config={"config_list":get_llm_config(model_name=model_names['researcher'], 
+                                                     api_key=api_key)},
             system_message="You are a critical thinker tasked for assessing the credibility of information from various angles."
             "Your role is to carefully analyze the information summarized by the Researcher, and validate the quality as well as trustworthiness of that information."
             "You should assess every piece of insight by questioning its logic, accuracy and biases."
